@@ -67,6 +67,9 @@ Mot de passe pour tous les comptes : **`Demo2026!`**
 | Enseignant | `omar.ali@focusia.test` | 1 groupe de Bases de données (L2), 2 notions, 1 quiz, 1 devoir |
 | Étudiants | `etudiant01@focusia.test` … `etudiant30@focusia.test` | Inscrits dans les groupes, avec des résultats variés |
 
+Pour créer un **compte enseignant** depuis la page d'inscription, il faut le code `FOCUSIA_TEACHER_CODE` du fichier `.env`
+(`PROF-DJIB-2026` en démo). Les étudiants n'ont besoin d'aucun code.
+
 Codes d'accès des groupes : `ALGO1A` (L1 TD1), `ALGO2B` (L1 TD2), `BDD2L2` (L2).
 Remettre la démo à zéro : `composer demo`.
 
@@ -90,6 +93,7 @@ Remettre la démo à zéro : `composer demo`.
 
 | Variable | Rôle | Défaut |
 | --- | --- | --- |
+| `FOCUSIA_TEACHER_CODE` | Code à donner aux enseignants pour créer leur compte (vide = inscription enseignant fermée) | `PROF-DJIB-2026` en démo |
 | `FOCUSIA_FILES_DISK` | Disque privé des fichiers (`local` ou `s3`) | `local` |
 | `FOCUSIA_MAX_UPLOAD_KB` | Taille maximale d'un fichier (Ko) | `10240` (10 Mo) |
 | `FOCUSIA_SIGNED_URL_MINUTES` | Durée de validité d'un lien de téléchargement | `10` |

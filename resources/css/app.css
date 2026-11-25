@@ -249,6 +249,96 @@
     }
 }
 
+/* ---------- Home page ---------- */
+/* Scroll reveal (directive v-reveal). */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Gentle floating of decorative cards. */
+.animate-float {
+    animation: focus-float 6s ease-in-out infinite;
+}
+@keyframes focus-float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+/* Slow zoom on photos ("Ken Burns"). */
+.animate-kenburns {
+    animation: focus-kenburns 18s ease-in-out infinite alternate;
+}
+@keyframes focus-kenburns {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.12) translate(-2%, -2%);
+    }
+}
+
+/* Endless horizontal strip of photos (the list is rendered twice). */
+.animate-marquee {
+    animation: focus-marquee 45s linear infinite;
+}
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+@keyframes focus-marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Moving brand gradient (navy -> blue -> violet, from the logo). */
+.text-brand-gradient {
+    background: linear-gradient(90deg, #0b2a6b, hsl(var(--primary)), #6d3fd6, hsl(var(--primary)), #0b2a6b);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: focus-gradient 8s ease-in-out infinite;
+}
+@keyframes focus-gradient {
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Soft blurred colour blobs behind the hero. */
+.animate-blob {
+    animation: focus-blob 14s ease-in-out infinite;
+}
+@keyframes focus-blob {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -40px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.95);
+    }
+}
+
 /* Respect the "reduce motion" accessibility setting of the device. */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -258,5 +348,17 @@
         animation-delay: 0ms !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+    /* Looping decorations stop instead of flickering; revealed content is simply shown. */
+    .animate-marquee,
+    .animate-kenburns,
+    .animate-float,
+    .animate-blob,
+    .text-brand-gradient {
+        animation: none !important;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
     }
 }

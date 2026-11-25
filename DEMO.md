@@ -31,7 +31,7 @@ Comptes (mot de passe **`Demo2026!`**) : enseignante `amina.hassan@focusia.test`
 
 | Min | Écran | Ce qu'on montre | Phrase clé |
 | --- | --- | --- | --- |
-| 0 | Accueil public | Le problème : connexions instables, suivi difficile | « Pensé pour les téléphones d'entrée de gamme et les coupures de réseau. » |
+| 0 | Accueil public | Photos de Djibouti, animations ; le problème : connexions instables, suivi difficile | « Pensé pour les téléphones d'entrée de gamme et les coupures de réseau. » |
 | 1 | Enseignante → Accueil | Étudiants en difficulté, notions à retravailler (Boucles en orange), derniers quiz | « L'enseignant voit en 10 secondes où le groupe bloque. » |
 | 2 | Groupes → TD1 → **Suivi** | Barres par notion, courbe des moyennes, étudiants à accompagner, **carte de compréhension** | « Chaque question est liée à une notion : la note devient un diagnostic. » |
 | 4 | Quiz → **Nouveau quiz** | Groupes en un toucher, raccourcis de date, toucher la lettre de la bonne réponse, notion créée sans quitter l'éditeur | « Un quiz de 5 questions en moins de 5 minutes. » |
@@ -51,6 +51,12 @@ Comptes (mot de passe **`Demo2026!`**) : enseignante `amina.hassan@focusia.test`
 - **Qualité** : 177 tests automatiques (les 20 règles métier), plus un test de bout en bout qui coupe vraiment le
   réseau dans le navigateur. Accessibilité, bonnes pratiques et SEO à 100 dans Lighthouse.
 - **Coût** : uniquement des logiciels libres et gratuits (Laravel, Vue, MariaDB, Cloudflare Tunnel gratuit).
+
+### Question probable : « Un étudiant peut-il se créer un compte enseignant ? »
+
+Non. L'inscription enseignant demande le **code enseignant** remis par l'établissement (`FOCUSIA_TEACHER_CODE`,
+`PROF-DJIB-2026` en démo). Sans ce code, ou avec un mauvais code, le compte n'est pas créé. Démonstration : page
+d'inscription → « Je suis enseignant » → saisir un faux code → message d'erreur.
 
 ## Plan B
 

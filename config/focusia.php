@@ -44,6 +44,10 @@ return [
     // Offline answers: tolerance added to the quiz duration (device clocks drift).
     'quiz_grace_seconds' => (int) env('FOCUSIA_QUIZ_GRACE_SECONDS', 60),
 
+    // Code asked when someone registers as a teacher (given by the institution).
+    // Empty = teacher registration closed. Students never need a code.
+    'teacher_code' => env('FOCUSIA_TEACHER_CODE', ''),
+
     // Login rate limiting: attempts per minute for one e-mail + IP.
     'login_max_attempts' => (int) env('FOCUSIA_LOGIN_MAX_ATTEMPTS', 5),
 

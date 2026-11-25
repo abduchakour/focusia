@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Link } from '@inertiajs/vue3';
 
 defineProps<{
@@ -17,13 +16,14 @@ defineProps<{
 
         <div class="animate-enter relative w-full max-w-md">
             <div class="mb-6 flex flex-col items-center gap-3 text-center">
-                <Link :href="route('home')" class="press flex items-center gap-2" aria-label="Accueil FocusIA">
-                    <span
-                        class="animate-pop flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                    >
-                        <AppLogoIcon class="size-6" />
-                    </span>
-                    <span class="text-2xl font-bold tracking-tight">Focus<span class="text-primary">IA</span></span>
+                <Link :href="route('home')" class="press block" aria-label="Accueil FocusIA">
+                    <img
+                        src="/images/focusia-logo.webp"
+                        alt="FocusIA – Apprendre, réviser, progresser"
+                        width="900"
+                        height="600"
+                        class="animate-pop h-28 w-auto rounded-2xl bg-white px-2 shadow-lg shadow-primary/10 sm:h-32"
+                    />
                 </Link>
             </div>
 

@@ -44,11 +44,40 @@ class RegistrationTest extends TestCase
         $this->assertSame(Institution::DEFAULT_ID, $user->institution_id);
     }
 
-    public function test_a_teacher_can_register(): void
+    public function test_a_teacher_registers_with_the_institution_code(): void
     {
-        $this->post('/register', $this->payload(['role' => 'teacher', 'email' => 'prof@example.com']));
+        // Case and spaces do not matter (typed on a phone).
+        $this->post('/register', $this->payload(['role' => 'teacher', 'email' => 'prof@example.com', 'teacher_code' => ' prof-test ']))
+            ->assertSessionHasNoErrors();
 
         $this->assertSame(Role::Teacher, User::firstWhere('email', 'prof@example.com')->role);
+    }
+
+    public function test_nobody_becomes_a_teacher_without_the_right_code(): void
+    {
+        $this->post('/register', $this->payload(['role' => 'teacher']))
+            ->assertSessionHasErrors(['teacher_code' => 'Saisissez le code enseignant donné par votre établissement.']);
+        $this->post('/register', $this->payload(['role' => 'teacher', 'teacher_code' => 'DEVINETTE']))
+            ->assertSessionHasErrors(['teacher_code' => "Code enseignant incorrect. Demandez-le à l'administration de votre établissement."]);
+
+        $this->assertGuest();
+        $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_teacher_registration_is_closed_without_a_configured_code(): void
+    {
+        config(['focusia.teacher_code' => '']);
+
+        $this->post('/register', $this->payload(['role' => 'teacher', 'teacher_code' => '']))
+            ->assertSessionHasErrors('teacher_code');
+        $this->assertDatabaseCount('users', 0);
+    }
+
+    public function test_a_student_never_needs_a_code(): void
+    {
+        $this->post('/register', $this->payload(['teacher_code' => 'n importe quoi']))->assertSessionHasNoErrors();
+
+        $this->assertSame(Role::Student, User::firstWhere('email', 'hodan@example.com')->role);
     }
 
     public function test_role_is_required_and_limited_to_teacher_or_student(): void

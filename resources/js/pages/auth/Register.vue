@@ -7,15 +7,19 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import type { Role } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
-import { GraduationCap, LoaderCircle, Presentation } from 'lucide-vue-next';
+import { GraduationCap, KeyRound, LoaderCircle, Presentation } from 'lucide-vue-next';
 
 const form = useForm({
-    role: '' as Role | '',
+    // "Je suis enseignant" on the home page opens this form with ?role=teacher.
+    role: (['student', 'teacher'].includes(new URLSearchParams(window.location.search).get('role') ?? '')
+        ? new URLSearchParams(window.location.search).get('role')
+        : '') as Role | '',
     first_name: '',
     last_name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    teacher_code: '',
 });
 
 const roles = [
@@ -54,6 +58,26 @@ const submit = () => {
                     </div>
                     <InputError :message="form.errors.role" />
                 </fieldset>
+
+                <!-- Teacher accounts: code given by the institution, so a student cannot become a teacher. -->
+                <Transition name="banner">
+                    <div v-if="form.role === 'teacher'" class="grid gap-2 rounded-xl border border-primary/25 bg-primary/5 p-4">
+                        <Label for="teacher_code" class="flex items-center gap-1.5"><KeyRound class="size-4 text-primary" /> Code enseignant</Label>
+                        <Input
+                            id="teacher_code"
+                            v-model="form.teacher_code"
+                            class="h-11 font-mono uppercase tracking-widest placeholder:font-sans placeholder:normal-case placeholder:tracking-normal"
+                            autocomplete="off"
+                            autocapitalize="characters"
+                            placeholder="Ex. PROF-XXXX"
+                            required
+                        />
+                        <p class="text-xs text-muted-foreground">
+                            Ce code est remis aux enseignants par l'administration de leur université ou institut.
+                        </p>
+                        <InputError :message="form.errors.teacher_code" />
+                    </div>
+                </Transition>
 
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div class="grid gap-2">

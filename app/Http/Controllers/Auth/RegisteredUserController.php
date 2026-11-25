@@ -39,7 +39,26 @@ class RegisteredUserController extends Controller
             'last_name' => 'required|string|max:100',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            // Teacher accounts need the code given by the institution (config focusia.teacher_code).
+            'teacher_code' => [
+                Rule::requiredIf($request->input('role') === Role::Teacher->value),
+                'nullable',
+                'string',
+                'max:100',
+                function (string $attribute, mixed $value, \Closure $fail) use ($request) {
+                    if ($request->input('role') !== Role::Teacher->value) {
+                        return;
+                    }
+                    $expected = (string) config('focusia.teacher_code');
+                    if ($expected === '') {
+                        $fail("L'inscription des enseignants est fermée pour le moment. Contactez l'administration de votre établissement.");
+                    } elseif (! hash_equals(mb_strtoupper(trim($expected)), mb_strtoupper(trim((string) $value)))) {
+                        $fail("Code enseignant incorrect. Demandez-le à l'administration de votre établissement.");
+                    }
+                },
+            ],
         ], [
+            'teacher_code.required' => 'Saisissez le code enseignant donné par votre établissement.',
             'role.required' => 'Indiquez si vous êtes enseignant ou étudiant.',
             'role.enum' => 'Indiquez si vous êtes enseignant ou étudiant.',
         ]);

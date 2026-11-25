@@ -78,6 +78,8 @@ Never stop processes that are not ours.
 - Errors 403/404/429 (and 500/503 when `APP_DEBUG=false`) render `pages/Error.vue` in French; 419 redirects back with a message.
 - Shared Inertia props expose only explicit user fields (`HandleInertiaRequests`), never the model.
 - Login throttling: `focusia.login_max_attempts` per e-mail+IP (LoginRequest) + `throttle:auth` 20/min per IP on login, register, forgot-password.
+- Teacher sign-up needs `focusia.teacher_code` (`FOCUSIA_TEACHER_CODE`, compared case-insensitively with `hash_equals`; empty = closed).
+  Students never need a code; `/register?role=teacher|student` preselects the role.
 - Password rule: min 8, letters + numbers (`AppServiceProvider`). French translations come from `laravel-lang/common` (`lang/fr`).
 
 ## Design system (set up in phase 2 — every new screen must use it)
@@ -206,6 +208,15 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
 - `DEMO.md`: jury checklist and 12-minute scenario (French). `README.md`: install, commands, future production setup.
 - Scripts in `scripts/*.ps1` are saved **UTF-8 with BOM** (Windows PowerShell 5.1 otherwise breaks accents).
 - e2e runs use `FOCUSIA_FILES_DISK=e2e` (`storage/app/e2e`) so their uploads never mix with real files.
+
+## Home page and brand (after V1)
+
+- Logo: `public/images/focusia-logo.webp` (owner's logo, white background → shown on a white rounded card), used on the
+  home page and auth pages. Brand gradient navy `#0b2a6b` → primary → violet `#6d3fd6`.
+- Home photos in `public/images/accueil/*.webp` come from **Wikimedia Commons** (CC BY / CC BY-SA, verified); credits
+  and licence links are listed in the home footer and must stay there. Never use official logos or unlicensed photos.
+- Scroll animations: directive `v-reveal` (`resources/js/directives/reveal.ts`) + CSS in `app.css` (reveal, float,
+  kenburns, marquee, brand gradient, blobs), all stopped under `prefers-reduced-motion`.
 
 ## Visual checks
 
