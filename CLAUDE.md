@@ -58,7 +58,9 @@ Never stop processes that are not ours.
 - Authorization **server-side on every request**: role (teacher/student) **and** group membership / ownership (Policies). Never rely on the UI.
 - `Choice::$hidden` hides `is_correct`: only reveal correct answers explicitly, and only after `corrections_at`.
 - Prefer DB constraints for invariants (unique pairs, CHECKs) **and** app validation for friendly messages.
-- File uploads: validate real MIME type (`mimetypes:`) + extension + size (`focusia.max_upload_kb`); store on the private disk; download through signed temporary URLs only.
+- File uploads: `App\Rules\AcceptedFile` checks the extension AND that the real MIME type (detected from the bytes)
+  matches it (`focusia.file_types` map), + size (`focusia.max_upload_kb`); `App\Services\FileStore` stores on the private
+  disk under a random name; downloads only through `files.link` → temporary signed `files.download` (bound to the user).
 - Dates: app timezone `Africa/Djibouti` (UTC+3, no DST).
 - PHP style: Pint (Laravel preset). Front: Prettier + ESLint, `<script setup lang="ts">`.
 - Commit at the end of each phase, message `feat(phase-N): ...`, with the Co-Authored-By trailer.
@@ -171,6 +173,18 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
 - Group follow-up lists **active members only**; quiz results keep removed students' copies, flagged "retiré du groupe" (rule 18).
 - Student dashboard per-notion view uses **only quizzes whose corrections are published** (rule 7).
 - Charts follow the dataviz rules: one hue, threshold shown by dashed line + icon + text (never colour alone), hover details, a table view.
+
+## Materials and library (phase 6)
+
+- Materials (`/enseignant/supports`) and library resources (`/enseignant/bibliotheque`) share one form, one list
+  (`pages/teacher/content/*`, `kind` = `support` | `ressource`) and `Teacher\Concerns\ManagesContent`; student pages
+  `pages/student/content/Index.vue`, grouped by subject. Visibility: `Models\Concerns\PublishedInGroups::scopeVisibleTo()`.
+- No group = not published (visible to the teacher only). Updates with a file: POST + `_method=put`, `forceFormData`.
+- Deleting a material deletes its file; linked homework is kept (rule 19, `nullOnDelete`).
+- Download flow: `GET /fichiers/{kind}/{id}` (policy `view`) → redirect to a signed `/telechargement/...?user=` link valid
+  `focusia.signed_url_minutes`; the download re-checks the policy and the user; expired link → French 403.
+  Laravel's public `/storage` serving of the local disk is disabled (`serve => false`).
+- Phones: bottom bar shows the first 4 menu items + "Plus" (sheet with the others, profile, logout).
 
 ## Visual checks
 

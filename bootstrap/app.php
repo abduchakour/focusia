@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,13 @@ return Application::configure(basePath: dirname(__DIR__))
             if (! in_array($status, $alwaysHandled, true)
                 && ! (in_array($status, $handledInProduction, true) && ! config('app.debug'))) {
                 return $response;
+            }
+
+            if ($e instanceof InvalidSignatureException) {
+                return Inertia::render('Error', [
+                    'status' => 403,
+                    'message' => 'Ce lien de téléchargement a expiré. Retournez sur la page et touchez à nouveau « Télécharger ».',
+                ])->toResponse($request)->setStatusCode(403);
             }
 
             // Only our own French messages (abort(403, '...')) are shown; Laravel's English defaults are not.

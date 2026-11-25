@@ -12,21 +12,24 @@ return [
     // Rule 20: maximum size per file, in kilobytes (10 MB by default).
     'max_upload_kb' => (int) env('FOCUSIA_MAX_UPLOAD_KB', 10240),
 
-    // Rule 20: accepted file types, checked against the real MIME type of the content.
-    'allowed_mimes' => [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-powerpoint',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'application/vnd.oasis.opendocument.text',
-        'image/jpeg',
-        'image/png',
-        'application/zip',
+    // Rule 20: accepted file types. Each extension lists the MIME types its REAL content may
+    // have (detected from the bytes, not from the name): a .exe renamed .pdf is refused, and
+    // so is a .docx renamed .pdf. Old Office files are often detected as "vnd.ms-office" or
+    // "CDFV2", new ones (docx, xlsx, pptx, odt are zip archives) sometimes as "zip".
+    'file_types' => [
+        'pdf' => ['application/pdf'],
+        'doc' => ['application/msword', 'application/vnd.ms-office', 'application/CDFV2'],
+        'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip'],
+        'xls' => ['application/vnd.ms-excel', 'application/vnd.ms-office', 'application/CDFV2'],
+        'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip'],
+        'ppt' => ['application/vnd.ms-powerpoint', 'application/vnd.ms-office', 'application/CDFV2'],
+        'pptx' => ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/zip'],
+        'odt' => ['application/vnd.oasis.opendocument.text', 'application/zip'],
+        'jpg' => ['image/jpeg'],
+        'jpeg' => ['image/jpeg'],
+        'png' => ['image/png'],
+        'zip' => ['application/zip', 'application/x-zip-compressed'],
     ],
-    'allowed_extensions' => ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'jpg', 'jpeg', 'png', 'zip'],
 
     // Lifetime of a temporary download link, in minutes.
     'signed_url_minutes' => (int) env('FOCUSIA_SIGNED_URL_MINUTES', 10),

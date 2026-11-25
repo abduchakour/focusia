@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // FocusIA serves private files itself (FileController: policy + signed link bound to the user).
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

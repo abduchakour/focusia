@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\Student;
 use App\Http\Controllers\Teacher;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,10 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', function () {
         return redirect()->route(request()->user()->isTeacher() ? 'teacher.dashboard' : 'student.dashboard');
     })->name('dashboard');
+
+    // Files (both roles, rights checked by the policies): a temporary signed link, then the download.
+    Route::get('fichiers/{kind}/{id}', [FileController::class, 'link'])->whereNumber('id')->name('files.link');
+    Route::get('telechargement/{kind}/{id}', [FileController::class, 'download'])->whereNumber('id')->middleware('signed')->name('files.download');
 
     // Teacher space. Every route here is forbidden to students (tested in RoleAccessTest).
     Route::prefix('enseignant')->name('teacher.')->middleware('role:teacher')->group(function () {
@@ -46,6 +51,21 @@ Route::middleware('auth')->group(function () {
         // Results and understanding (phase 5)
         Route::get('quiz/{quiz}/resultats', Teacher\QuizResultController::class)->name('quizzes.results');
         Route::get('groupes/{group}/suivi', Teacher\GroupInsightController::class)->name('groups.insights');
+
+        // Course materials and library (phase 6). Updates with a file are sent as POST + _method=PUT.
+        Route::get('supports', [Teacher\MaterialController::class, 'index'])->name('materials.index');
+        Route::get('supports/nouveau', [Teacher\MaterialController::class, 'create'])->name('materials.create');
+        Route::post('supports', [Teacher\MaterialController::class, 'store'])->name('materials.store');
+        Route::get('supports/{material}/modifier', [Teacher\MaterialController::class, 'edit'])->name('materials.edit');
+        Route::put('supports/{material}', [Teacher\MaterialController::class, 'update'])->name('materials.update');
+        Route::delete('supports/{material}', [Teacher\MaterialController::class, 'destroy'])->name('materials.destroy');
+
+        Route::get('bibliotheque', [Teacher\ResourceController::class, 'index'])->name('resources.index');
+        Route::get('bibliotheque/nouveau', [Teacher\ResourceController::class, 'create'])->name('resources.create');
+        Route::post('bibliotheque', [Teacher\ResourceController::class, 'store'])->name('resources.store');
+        Route::get('bibliotheque/{resource}/modifier', [Teacher\ResourceController::class, 'edit'])->name('resources.edit');
+        Route::put('bibliotheque/{resource}', [Teacher\ResourceController::class, 'update'])->name('resources.update');
+        Route::delete('bibliotheque/{resource}', [Teacher\ResourceController::class, 'destroy'])->name('resources.destroy');
     });
 
     // Student space. Every route here is forbidden to teachers.
@@ -62,6 +82,10 @@ Route::middleware('auth')->group(function () {
         Route::get('quiz/{quiz}/passer', [Student\QuizController::class, 'take'])->name('quizzes.take');
         Route::post('quiz/{quiz}/reponses', [Student\QuizController::class, 'submit'])->middleware('throttle:30,1')->name('quizzes.submit');
         Route::get('quiz/{quiz}/resultat', [Student\QuizController::class, 'result'])->name('quizzes.result');
+
+        // Course materials and library (phase 6)
+        Route::get('supports', [Student\ContentController::class, 'materials'])->name('materials.index');
+        Route::get('bibliotheque', [Student\ContentController::class, 'resources'])->name('resources.index');
     });
 });
 

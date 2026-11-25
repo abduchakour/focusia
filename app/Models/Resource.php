@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Level;
 use App\Enums\ResourceType;
+use App\Models\Concerns\PublishedInGroups;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /** Library resource (document, video, link, exercise): a file, a link, or both. */
 class Resource extends Model
 {
+    use PublishedInGroups;
+
     protected $fillable = [
         'teacher_id', 'title', 'description', 'type', 'subject', 'level',
         'file_path', 'file_name', 'mime_type', 'file_size', 'url',
