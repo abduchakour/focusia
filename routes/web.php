@@ -18,11 +18,25 @@ Route::middleware('auth')->group(function () {
     // Teacher space. Every route here is forbidden to students (tested in RoleAccessTest).
     Route::prefix('enseignant')->name('teacher.')->middleware('role:teacher')->group(function () {
         Route::get('/', Teacher\DashboardController::class)->name('dashboard');
+
+        // Groups (phase 2)
+        Route::get('groupes', [Teacher\GroupController::class, 'index'])->name('groups.index');
+        Route::post('groupes', [Teacher\GroupController::class, 'store'])->name('groups.store');
+        Route::get('groupes/{group}', [Teacher\GroupController::class, 'show'])->name('groups.show');
+        Route::put('groupes/{group}', [Teacher\GroupController::class, 'update'])->name('groups.update');
+        Route::delete('groupes/{group}', [Teacher\GroupController::class, 'destroy'])->name('groups.destroy');
+        Route::post('groupes/{group}/code', [Teacher\GroupController::class, 'regenerateCode'])->name('groups.code');
+        Route::delete('groupes/{group}/etudiants/{student}', [Teacher\GroupController::class, 'removeStudent'])->name('groups.students.remove');
+        Route::post('groupes/{group}/etudiants/{student}/reintegrer', [Teacher\GroupController::class, 'restoreStudent'])->name('groups.students.restore');
     });
 
     // Student space. Every route here is forbidden to teachers.
     Route::prefix('etudiant')->name('student.')->middleware('role:student')->group(function () {
         Route::get('/', Student\DashboardController::class)->name('dashboard');
+
+        // Groups (phase 2)
+        Route::get('groupes', [Student\GroupController::class, 'index'])->name('groups.index');
+        Route::post('groupes/rejoindre', [Student\GroupController::class, 'join'])->middleware('throttle:join-group')->name('groups.join');
     });
 });
 

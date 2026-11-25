@@ -41,6 +41,10 @@ const currentPath = window.location.pathname;
                             {{ item.title }}
                         </Link>
                     </Button>
+                    <!-- Phones have no sidebar user menu: logout lives here. -->
+                    <Button variant="ghost" class="w-full justify-start text-destructive md:hidden" as-child>
+                        <Link :href="route('logout')" method="post" as="button">Se déconnecter</Link>
+                    </Button>
                 </nav>
             </aside>
 

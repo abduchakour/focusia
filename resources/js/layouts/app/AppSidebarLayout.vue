@@ -4,6 +4,7 @@ import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
 import FlashMessage from '@/components/FlashMessage.vue';
+import MobileNav from '@/components/MobileNav.vue';
 import type { BreadcrumbItemType } from '@/types';
 
 interface Props {
@@ -18,10 +19,11 @@ withDefaults(defineProps<Props>(), {
 <template>
     <AppShell variant="sidebar">
         <AppSidebar />
-        <AppContent variant="sidebar">
+        <AppContent variant="sidebar" class="pb-safe-nav md:pb-0">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />
             <FlashMessage />
             <slot />
         </AppContent>
+        <MobileNav />
     </AppShell>
 </template>

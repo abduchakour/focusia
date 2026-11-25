@@ -17,8 +17,9 @@ watch(
 <template>
     <div v-if="visible && (page.props.flash.success || page.props.flash.error)" class="px-4 pt-4" role="status" aria-live="polite">
         <div
+            :key="page.props.flash.error ?? page.props.flash.success ?? ''"
             :class="[
-                'flex items-start gap-3 rounded-lg border p-3 text-sm',
+                'animate-enter mx-auto flex max-w-5xl items-start gap-3 rounded-xl border p-3 text-sm shadow-sm',
                 page.props.flash.error
                     ? 'border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200'
                     : 'border-green-200 bg-green-50 text-green-800 dark:border-green-900 dark:bg-green-950 dark:text-green-200',

@@ -75,6 +75,18 @@ Never stop processes that are not ours.
 - Login throttling: `focusia.login_max_attempts` per e-mail+IP (LoginRequest) + `throttle:auth` 20/min per IP on login, register, forgot-password.
 - Password rule: min 8, letters + numbers (`AppServiceProvider`). French translations come from `laravel-lang/common` (`lang/fr`).
 
+## Design system (set up in phase 2 — every new screen must use it)
+
+- Palette (inspired by the Djibouti flag) in `resources/css/app.css`: `primary` sky blue, `success` green, `warning` amber,
+  `destructive` red; light + dark themes. Radius `0.75rem`, cards `rounded-2xl border bg-card`. System fonts only (no web font).
+- Page skeleton: `AppLayout` → `PageContainer` (width, padding, entrance) → `PageHeader` (title, description, back link, `#actions`).
+- Phones: bottom bar `MobileNav` (items from `composables/useNavigation.ts`, shared with the sidebar); touch targets ≥ 44 px (`h-11`).
+- Reusable: `EmptyState`, `StatCard` (animated count-up), `ConfirmDialog` (every destructive action), `CopyButton`,
+  `NativeSelect` (native select = best on phones), `FlashMessage`.
+- Motion is **CSS only** (no animation library): `.animate-enter`, `.animate-stagger` + `style="--i: n"`, `.animate-pop`,
+  `.press`, `.lift`; buttons scale on press. `prefers-reduced-motion` disables everything globally.
+- Ziggy `route()` params: always named objects, e.g. `route('teacher.groups.show', { group: id })` (typecheck requires it).
+
 ## Data model (see `database/migrations`)
 
 `institutions` · `users` (first_name, last_name, role teacher|student, institution_id) · `groups` (access_code 6 chars unique) ·
