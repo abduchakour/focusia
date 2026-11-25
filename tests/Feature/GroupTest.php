@@ -108,6 +108,7 @@ class GroupTest extends TestCase
 
         $this->get(route('teacher.groups.show', $other))->assertForbidden();
         $this->put(route('teacher.groups.update', $other), ['name' => 'X', 'subject' => 'Y', 'level' => 'L1'])->assertForbidden();
+        $this->put(route('teacher.groups.update', $other), ['name' => ''])->assertForbidden(); // 403 even with invalid data
         $this->post(route('teacher.groups.code', $other))->assertForbidden();
         $this->delete(route('teacher.groups.students.remove', [$other, $this->student]))->assertForbidden();
         $this->delete(route('teacher.groups.destroy', $other))->assertForbidden();

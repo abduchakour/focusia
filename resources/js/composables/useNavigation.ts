@@ -1,6 +1,6 @@
 import { type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
-import { LayoutGrid, UserRound, UsersRound } from 'lucide-vue-next';
+import { BookOpenCheck, LayoutGrid, Tags, UserRound, UsersRound } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 /**
@@ -15,6 +15,8 @@ export function useNavigation() {
             ? [
                   { title: 'Accueil', href: route('teacher.dashboard'), icon: LayoutGrid },
                   { title: 'Groupes', href: route('teacher.groups.index'), icon: UsersRound },
+                  { title: 'Quiz', href: route('teacher.quizzes.index'), icon: BookOpenCheck },
+                  { title: 'Notions', href: route('teacher.notions.index'), icon: Tags },
               ]
             : [
                   { title: 'Accueil', href: route('student.dashboard'), icon: LayoutGrid },

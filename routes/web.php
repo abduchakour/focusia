@@ -28,6 +28,20 @@ Route::middleware('auth')->group(function () {
         Route::post('groupes/{group}/code', [Teacher\GroupController::class, 'regenerateCode'])->name('groups.code');
         Route::delete('groupes/{group}/etudiants/{student}', [Teacher\GroupController::class, 'removeStudent'])->name('groups.students.remove');
         Route::post('groupes/{group}/etudiants/{student}/reintegrer', [Teacher\GroupController::class, 'restoreStudent'])->name('groups.students.restore');
+
+        // Notions and quizzes (phase 3)
+        Route::get('notions', [Teacher\NotionController::class, 'index'])->name('notions.index');
+        Route::post('notions', [Teacher\NotionController::class, 'store'])->name('notions.store');
+        Route::put('notions/{notion}', [Teacher\NotionController::class, 'update'])->name('notions.update');
+        Route::delete('notions/{notion}', [Teacher\NotionController::class, 'destroy'])->name('notions.destroy');
+
+        Route::get('quiz', [Teacher\QuizController::class, 'index'])->name('quizzes.index');
+        Route::get('quiz/nouveau', [Teacher\QuizController::class, 'create'])->name('quizzes.create');
+        Route::post('quiz', [Teacher\QuizController::class, 'store'])->name('quizzes.store');
+        Route::get('quiz/{quiz}/modifier', [Teacher\QuizController::class, 'edit'])->name('quizzes.edit');
+        Route::put('quiz/{quiz}', [Teacher\QuizController::class, 'update'])->name('quizzes.update');
+        Route::delete('quiz/{quiz}', [Teacher\QuizController::class, 'destroy'])->name('quizzes.destroy');
+        Route::post('quiz/{quiz}/dupliquer', [Teacher\QuizController::class, 'duplicate'])->name('quizzes.duplicate');
     });
 
     // Student space. Every route here is forbidden to teachers.

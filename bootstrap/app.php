@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -49,7 +50,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return $response;
             }
 
-            $message = $e instanceof HttpExceptionInterface && $e->getMessage() !== '' ? $e->getMessage() : null;
+            // Only our own French messages (abort(403, '...')) are shown; Laravel's English defaults are not.
+            $message = $e instanceof HttpExceptionInterface && $e->getMessage() !== '' && ! $e->getPrevious() instanceof AuthorizationException
+                ? $e->getMessage()
+                : null;
 
             return Inertia::render('Error', ['status' => $status, 'message' => $message])
                 ->toResponse($request)

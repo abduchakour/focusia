@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Routing\Route as RoutingRoute;
@@ -82,6 +83,16 @@ class RoleAccessTest extends TestCase
                 ->component('Error')
                 ->where('status', 403)
                 ->where('message', 'Cette page est réservée aux enseignants.'));
+    }
+
+    public function test_ownership_refusal_never_shows_laravels_english_message(): void
+    {
+        $intruder = User::factory()->teacher()->create();
+        $group = Group::factory()->create();
+
+        $this->actingAs($intruder)->get(route('teacher.groups.show', $group))
+            ->assertForbidden()
+            ->assertInertia(fn (Assert $page) => $page->component('Error')->where('message', null));
     }
 
     public function test_unknown_page_shows_the_french_404_page(): void

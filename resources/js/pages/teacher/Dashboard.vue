@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { BookOpenCheck, GraduationCap, UsersRound } from 'lucide-vue-next';
+import { BookOpenCheck, GraduationCap, Plus, UsersRound } from 'lucide-vue-next';
 
 defineProps<{
     stats: { groups: number; students: number; quizzes: number };
@@ -23,7 +23,10 @@ const breadcrumbs: BreadcrumbItem[] = [{ title: 'Tableau de bord', href: route('
         <PageContainer>
             <PageHeader :title="`Bonjour ${page.props.auth.user.first_name} 👋`" description="Voici l'essentiel de vos groupes.">
                 <template #actions>
-                    <Button as-child class="h-11"><Link :href="route('teacher.groups.index')">Mes groupes</Link></Button>
+                    <Button as-child variant="outline" class="h-11"><Link :href="route('teacher.groups.index')">Mes groupes</Link></Button>
+                    <Button as-child class="h-11 shadow-md shadow-primary/25">
+                        <Link :href="route('teacher.quizzes.create')"><Plus /> Nouveau quiz</Link>
+                    </Button>
                 </template>
             </PageHeader>
 

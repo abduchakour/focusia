@@ -138,3 +138,17 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
 - **Removed student** cannot re-join with the code; only the teacher can reinstate them.
 - **Quiz with attempts**: questions/choices locked; dates and groups still editable; duplicate to change content.
 - One default institution (id 1) created by migration; users and groups attach to it automatically.
+
+## Decisions taken in phase 3 (quizzes and notions)
+
+- `corrections_at` must be ≥ `due_at` (otherwise early finishers could share answers before the deadline).
+- Publishing needs ≥ 1 group and a future `due_at`; a draft needs neither. A quiz answered by a student cannot go back to draft.
+- A quiz already answered cannot be deleted (results are kept); a notion used by a question cannot be deleted.
+- Ownership is checked in FormRequest `authorize()` (before validation) → intruders always get 403, never validation errors.
+- Notions are per teacher + subject; the editor proposes the notions of the quiz subject and can create one inline.
+
+## Visual checks
+
+Playwright (`@playwright/test`, no browser download) drives the installed **Edge** (`channel: 'msedge'`) for screenshots
+and, in phase 4, offline end-to-end tests. Wait for page content before a screenshot (Inertia pages load lazily).
+The owner's PC has 4 GB RAM: keep one dev server at a time, prefer `composer start` for demos.
