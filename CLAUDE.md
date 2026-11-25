@@ -30,7 +30,7 @@ multi-answer questions, languages other than French. The `institutions` table al
 | Charts | (phase 5) Chart.js via vue-chartjs |
 | Tests | PHPUnit (`php artisan test`) on MariaDB; (phase 4) Playwright for offline flows |
 | CI | GitHub Actions `.github/workflows/ci.yml` (Pint, ESLint, Prettier, vue-tsc, build, tests on MariaDB service) |
-| Demo on phones | free Cloudflare quick tunnel (`cloudflared tunnel --url http://localhost:8001`) for HTTPS |
+| Demo on phones | free Cloudflare quick tunnel (`cloudflared tunnel --url http://127.0.0.1:8001`) for HTTPS |
 
 ## Commands
 

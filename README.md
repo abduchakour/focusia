@@ -41,7 +41,7 @@ composer demo
 composer dev
 ```
 
-L'application est disponible sur **http://localhost:8001**.
+L'application est disponible sur **http://127.0.0.1:8001**.
 
 ## Comptes de démonstration
 
