@@ -27,7 +27,7 @@ multi-answer questions, languages other than French. The `institutions` table al
 | Auth | Laravel sessions (DB driver, encrypted, httpOnly, sameSite=lax), **Argon2id** (`HASH_DRIVER`), CSRF built in, login throttling |
 | Files | Private Laravel disk (`FOCUSIA_FILES_DISK=local` → `storage/app/private`), temporary signed URLs (10 min). `s3` (R2/B2) possible later without code changes |
 | Offline | `vite-plugin-pwa` (injectManifest, `resources/js/sw.ts` → `public/sw.js`, generated) + **Dexie.js** (IndexedDB) |
-| Charts | (phase 5) Chart.js via vue-chartjs |
+| Charts | Hand-made HTML/SVG components in `resources/js/components/charts` (no chart library: lighter on low-end phones, CSS animations) |
 | Tests | PHPUnit (`php artisan test`) on MariaDB; Playwright e2e (`npm run test:e2e`, Edge, DB `focusia_e2e`, port 8002) |
 | CI | GitHub Actions `.github/workflows/ci.yml` (Pint, ESLint, Prettier, vue-tsc, build, tests on MariaDB service) |
 | Demo on phones | free Cloudflare quick tunnel (`cloudflared tunnel --url http://127.0.0.1:8001`) for HTTPS |
@@ -160,6 +160,17 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
   stores pages reached by Inertia links; offline, Inertia GET visits become full page loads; logout deletes the page cache.
 - Before `corrections_at` the result page shows the grade only (no per-notion detail: a one-question notion would reveal the answer).
 - JSON requests keep plain JSON errors (exception renderer skips `expectsJson()` non-Inertia requests).
+
+## Results and understanding (phase 5)
+
+- Queries in `App\Services\Insights` (`notionRates()`, `group()`); formulas stay in `App\Support\Grading`.
+- Notion rate counts **answers given only** (blank answers excluded). Only submitted attempts count.
+- Teacher: `teacher.quizzes.results` (participation, average/median, grade ranges, notions, per-question choice
+  distribution with "frequent error" ≥ 25 %, copies, non-respondents; `?groupe=` filter) and `teacher.groups.insights`
+  (notion bars, average per quiz, students in difficulty with reasons, student × notion heat map). Dashboard: weak notions, latest quizzes, groups.
+- Group follow-up lists **active members only**; quiz results keep removed students' copies, flagged "retiré du groupe" (rule 18).
+- Student dashboard per-notion view uses **only quizzes whose corrections are published** (rule 7).
+- Charts follow the dataviz rules: one hue, threshold shown by dashed line + icon + text (never colour alone), hover details, a table view.
 
 ## Visual checks
 

@@ -10,8 +10,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/vue3';
-import { EllipsisVertical, Pencil, RefreshCw, Share2, Trash2, UserMinus, UserPlus, UsersRound } from 'lucide-vue-next';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ChartNoAxesColumn, EllipsisVertical, Pencil, RefreshCw, Share2, Trash2, UserMinus, UserPlus, UsersRound } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 interface Student {
@@ -105,6 +105,9 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { 
                 back-label="Mes groupes"
             >
                 <template #actions>
+                    <Button as-child class="h-11 shadow-md shadow-primary/25">
+                        <Link :href="route('teacher.groups.insights', { group: group.id })"><ChartNoAxesColumn /> Suivi</Link>
+                    </Button>
                     <Button variant="outline" class="h-11" @click="editing = true"><Pencil /> Modifier</Button>
                     <DropdownMenu>
                         <DropdownMenuTrigger as-child>

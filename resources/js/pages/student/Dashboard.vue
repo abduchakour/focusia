@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import RateBars from '@/components/charts/RateBars.vue';
 import PageContainer from '@/components/PageContainer.vue';
 import PageHeader from '@/components/PageHeader.vue';
 import StatCard from '@/components/StatCard.vue';
@@ -16,6 +17,7 @@ defineProps<{
     stats: { groups: number; attempts: number; average: number | null };
     todo: { id: number; title: string; subject: string; questions_count: number; duration_minutes: number | null; due_at: string }[];
     recent: { quiz_id: number; title: string; subject: string; score: number; answered_at: string }[];
+    notions: { name: string; correct: number; answered: number; rate: number | null }[];
 }>();
 
 const page = usePage<SharedData>();
@@ -127,6 +129,13 @@ onMounted(() => keepPageForOffline());
                     </Link>
                 </section>
             </div>
+
+            <!-- Personal understanding per notion (only corrected quizzes, rule 7) -->
+            <section v-if="notions.length" class="animate-enter rounded-2xl border bg-card p-5" style="animation-delay: 0.35s">
+                <h2 class="font-semibold">Ma compréhension par notion</h2>
+                <p class="mb-5 text-sm text-muted-foreground">D'après vos quiz corrigés : commencez vos révisions par les notions signalées.</p>
+                <RateBars :items="notions" sort />
+            </section>
         </PageContainer>
     </AppLayout>
 </template>

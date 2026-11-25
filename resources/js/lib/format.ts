@@ -43,3 +43,8 @@ export function localInputValue(daysFromNow: number, hours = 23, minutes = 59): 
 export function plural(count: number, singular: string, pluralForm = `${singular}s`): string {
     return `${count} ${count > 1 ? pluralForm : singular}`;
 }
+
+/** "42 %" from a 0..1 rate. */
+export function percent(rate: number): string {
+    return `${Math.round(rate * 100)} %`;
+}

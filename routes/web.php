@@ -42,6 +42,10 @@ Route::middleware('auth')->group(function () {
         Route::put('quiz/{quiz}', [Teacher\QuizController::class, 'update'])->name('quizzes.update');
         Route::delete('quiz/{quiz}', [Teacher\QuizController::class, 'destroy'])->name('quizzes.destroy');
         Route::post('quiz/{quiz}/dupliquer', [Teacher\QuizController::class, 'duplicate'])->name('quizzes.duplicate');
+
+        // Results and understanding (phase 5)
+        Route::get('quiz/{quiz}/resultats', Teacher\QuizResultController::class)->name('quizzes.results');
+        Route::get('groupes/{group}/suivi', Teacher\GroupInsightController::class)->name('groups.insights');
     });
 
     // Student space. Every route here is forbidden to teachers.

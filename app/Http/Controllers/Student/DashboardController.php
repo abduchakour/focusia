@@ -6,13 +6,14 @@ use App\Enums\AttemptStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Attempt;
 use App\Models\Quiz;
+use App\Services\Insights;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, Insights $insights): Response
     {
         $student = $request->user();
         $graded = $student->attempts()->where('status', AttemptStatus::Submitted);
@@ -56,6 +57,11 @@ class DashboardController extends Controller
                 'average' => $average === null ? null : round((float) $average, 2),
             ],
             'todo' => $todo,
+            // Rule 7: only quizzes whose corrections are published feed the per-notion view.
+            'notions' => $insights->notionRates(
+                Quiz::visibleTo($student)->where('corrections_at', '<=', now())->pluck('id')->all(),
+                [$student->id],
+            )->map(fn ($n) => ['name' => $n->name, 'correct' => $n->correct, 'answered' => $n->answered, 'rate' => $n->rate])->values(),
             'recent' => $recent,
         ]);
     }

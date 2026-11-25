@@ -10,7 +10,7 @@ import { dateTime, fromNow, plural } from '@/lib/format';
 import { type BreadcrumbItem } from '@/types';
 import type { QuizStatus } from '@/types/quiz';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { BookOpenCheck, CalendarClock, CopyPlus, EllipsisVertical, Pencil, Plus, Trash2, UsersRound } from 'lucide-vue-next';
+import { BookOpenCheck, CalendarClock, ChartNoAxesColumn, CopyPlus, EllipsisVertical, Pencil, Plus, Trash2, UsersRound } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 interface QuizRow {
@@ -148,6 +148,11 @@ const duplicate = (quiz: QuizRow) => router.post(route('teacher.quizzes.duplicat
                                                 ><Pencil class="mr-2 size-4" /> Modifier</Link
                                             >
                                         </DropdownMenuItem>
+                                        <DropdownMenuItem v-if="quiz.status !== 'draft'" as-child>
+                                            <Link :href="route('teacher.quizzes.results', { quiz: quiz.id })" class="w-full"
+                                                ><ChartNoAxesColumn class="mr-2 size-4" /> Résultats</Link
+                                            >
+                                        </DropdownMenuItem>
                                         <DropdownMenuItem @select="duplicate(quiz)"><CopyPlus class="mr-2 size-4" /> Dupliquer</DropdownMenuItem>
                                         <DropdownMenuItem class="text-destructive focus:text-destructive" @select="toDelete = quiz">
                                             <Trash2 class="mr-2 size-4" /> Supprimer
@@ -168,7 +173,14 @@ const duplicate = (quiz: QuizRow) => router.post(route('teacher.quizzes.duplicat
                             </div>
 
                             <div class="mt-auto flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-sm text-muted-foreground">
-                                <span>{{ plural(quiz.questions_count, 'question') }} · {{ plural(quiz.attempts_count, 'réponse') }}</span>
+                                <Link
+                                    v-if="quiz.status !== 'draft'"
+                                    :href="route('teacher.quizzes.results', { quiz: quiz.id })"
+                                    class="press inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1.5 font-medium text-primary hover:bg-primary/15"
+                                >
+                                    <ChartNoAxesColumn class="size-4" /> Résultats · {{ quiz.attempts_count }}
+                                </Link>
+                                <span v-else>{{ plural(quiz.questions_count, 'question') }}</span>
                                 <span class="inline-flex items-center gap-1" :title="dateTime(quiz.due_at)">
                                     <CalendarClock class="size-4" />
                                     {{ quiz.status === 'closed' ? 'Terminé' : 'Se termine' }} {{ fromNow(quiz.due_at) }}
