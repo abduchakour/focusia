@@ -1,6 +1,6 @@
 import { type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/vue3';
-import { BookOpenCheck, FileText, LayoutGrid, Library, Tags, UsersRound } from 'lucide-vue-next';
+import { BookOpenCheck, ClipboardList, FileText, LayoutGrid, Library, Tags, UsersRound } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 /** Items shown directly in the phone bottom bar; the others go in the "Plus" panel. */
@@ -19,6 +19,7 @@ export function useNavigation() {
                   { title: 'Accueil', href: route('teacher.dashboard'), icon: LayoutGrid },
                   { title: 'Groupes', href: route('teacher.groups.index'), icon: UsersRound },
                   { title: 'Quiz', href: route('teacher.quizzes.index'), icon: BookOpenCheck },
+                  { title: 'Devoirs', href: route('teacher.assignments.index'), icon: ClipboardList },
                   { title: 'Supports', href: route('teacher.materials.index'), icon: FileText },
                   { title: 'Bibliothèque', href: route('teacher.resources.index'), icon: Library },
                   { title: 'Notions', href: route('teacher.notions.index'), icon: Tags },
@@ -26,6 +27,7 @@ export function useNavigation() {
             : [
                   { title: 'Accueil', href: route('student.dashboard'), icon: LayoutGrid },
                   { title: 'Quiz', href: route('student.quizzes.index'), icon: BookOpenCheck },
+                  { title: 'Devoirs', href: route('student.assignments.index'), icon: ClipboardList },
                   { title: 'Supports', href: route('student.materials.index'), icon: FileText },
                   { title: 'Bibliothèque', href: route('student.resources.index'), icon: Library },
                   { title: 'Groupes', href: route('student.groups.index'), icon: UsersRound },

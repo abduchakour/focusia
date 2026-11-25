@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Material;
 use App\Models\Resource;
+use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -22,6 +23,7 @@ class FileStore
     public const KINDS = [
         'support' => Material::class,
         'ressource' => Resource::class,
+        'rendu' => Submission::class,
     ];
 
     public function disk(): FilesystemAdapter

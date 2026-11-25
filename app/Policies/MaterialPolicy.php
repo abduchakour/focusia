@@ -18,6 +18,14 @@ class MaterialPolicy
 
     public function view(User $user, Material $material): bool
     {
-        return $this->manage($user, $material) || ($user->isStudent() && $material->isVisibleTo($user));
+        if ($this->manage($user, $material)) {
+            return true;
+        }
+
+        // Published in one of the student's groups, or linked to homework they can see (rule 13).
+        return $user->isStudent() && (
+            $material->isVisibleTo($user)
+            || $material->assignments()->visibleTo($user)->exists()
+        );
     }
 }

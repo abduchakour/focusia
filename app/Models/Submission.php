@@ -32,6 +32,12 @@ class Submission extends Model
         ];
     }
 
+    /** File extension in capitals for display ("PDF"), null without a file. */
+    public function fileExtension(): ?string
+    {
+        return $this->file_name ? strtoupper(pathinfo($this->file_name, PATHINFO_EXTENSION)) : null;
+    }
+
     public function assignment(): BelongsTo
     {
         return $this->belongsTo(Assignment::class);

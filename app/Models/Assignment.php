@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\PublishedInGroups;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,6 +17,8 @@ use Illuminate\Support\Carbon;
  */
 class Assignment extends Model
 {
+    use PublishedInGroups;
+
     protected $fillable = ['teacher_id', 'material_id', 'title', 'instructions', 'due_at', 'allow_late'];
 
     protected function casts(): array

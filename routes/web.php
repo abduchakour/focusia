@@ -60,6 +60,16 @@ Route::middleware('auth')->group(function () {
         Route::put('supports/{material}', [Teacher\MaterialController::class, 'update'])->name('materials.update');
         Route::delete('supports/{material}', [Teacher\MaterialController::class, 'destroy'])->name('materials.destroy');
 
+        // Homework (phase 7)
+        Route::get('devoirs', [Teacher\AssignmentController::class, 'index'])->name('assignments.index');
+        Route::get('devoirs/nouveau', [Teacher\AssignmentController::class, 'create'])->name('assignments.create');
+        Route::post('devoirs', [Teacher\AssignmentController::class, 'store'])->name('assignments.store');
+        Route::get('devoirs/{assignment}', [Teacher\AssignmentController::class, 'show'])->name('assignments.show');
+        Route::get('devoirs/{assignment}/modifier', [Teacher\AssignmentController::class, 'edit'])->name('assignments.edit');
+        Route::put('devoirs/{assignment}', [Teacher\AssignmentController::class, 'update'])->name('assignments.update');
+        Route::delete('devoirs/{assignment}', [Teacher\AssignmentController::class, 'destroy'])->name('assignments.destroy');
+        Route::put('devoirs/{assignment}/rendus/{submission}', [Teacher\AssignmentController::class, 'grade'])->name('assignments.grade');
+
         Route::get('bibliotheque', [Teacher\ResourceController::class, 'index'])->name('resources.index');
         Route::get('bibliotheque/nouveau', [Teacher\ResourceController::class, 'create'])->name('resources.create');
         Route::post('bibliotheque', [Teacher\ResourceController::class, 'store'])->name('resources.store');
@@ -86,6 +96,11 @@ Route::middleware('auth')->group(function () {
         // Course materials and library (phase 6)
         Route::get('supports', [Student\ContentController::class, 'materials'])->name('materials.index');
         Route::get('bibliotheque', [Student\ContentController::class, 'resources'])->name('resources.index');
+
+        // Homework (phase 7)
+        Route::get('devoirs', [Student\AssignmentController::class, 'index'])->name('assignments.index');
+        Route::get('devoirs/{assignment}', [Student\AssignmentController::class, 'show'])->name('assignments.show');
+        Route::post('devoirs/{assignment}/rendu', [Student\AssignmentController::class, 'submit'])->name('assignments.submit');
     });
 });
 
