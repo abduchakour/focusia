@@ -51,6 +51,13 @@ Route::middleware('auth')->group(function () {
         // Groups (phase 2)
         Route::get('groupes', [Student\GroupController::class, 'index'])->name('groups.index');
         Route::post('groupes/rejoindre', [Student\GroupController::class, 'join'])->middleware('throttle:join-group')->name('groups.join');
+
+        // Taking quizzes, online or offline (phase 4)
+        Route::get('quiz', [Student\QuizController::class, 'index'])->name('quizzes.index');
+        Route::post('quiz/{quiz}/commencer', [Student\QuizController::class, 'start'])->name('quizzes.start');
+        Route::get('quiz/{quiz}/passer', [Student\QuizController::class, 'take'])->name('quizzes.take');
+        Route::post('quiz/{quiz}/reponses', [Student\QuizController::class, 'submit'])->middleware('throttle:30,1')->name('quizzes.submit');
+        Route::get('quiz/{quiz}/resultat', [Student\QuizController::class, 'result'])->name('quizzes.result');
     });
 });
 

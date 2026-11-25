@@ -38,6 +38,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->respond(function (Response $response, Throwable $e, Request $request) {
             $status = $response->getStatusCode();
 
+            // JSON calls (offline sync of quiz answers) keep plain JSON errors.
+            if ($request->expectsJson() && ! $request->header('X-Inertia')) {
+                return $response;
+            }
+
             if ($status === 419) {
                 return back()->with('error', 'La page a expiré. Veuillez réessayer.');
             }

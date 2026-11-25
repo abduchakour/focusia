@@ -159,6 +159,96 @@
     }
 }
 
+/* Banners sliding in / out (Vue <Transition name="banner">). */
+.banner-enter-active,
+.banner-leave-active {
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.banner-enter-from,
+.banner-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+/* Quiz taking: questions slide in the direction of navigation. */
+.q-next-enter-active,
+.q-next-leave-active,
+.q-prev-enter-active,
+.q-prev-leave-active {
+    transition:
+        opacity 0.2s ease,
+        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.q-next-enter-from,
+.q-prev-leave-to {
+    opacity: 0;
+    transform: translateX(28px);
+}
+.q-next-leave-to,
+.q-prev-enter-from {
+    opacity: 0;
+    transform: translateX(-28px);
+}
+
+/* Soft halo around a waiting icon. */
+.animate-halo {
+    animation: focus-halo 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes focus-halo {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+    }
+    80%,
+    100% {
+        transform: scale(1.45);
+        opacity: 0;
+    }
+}
+
+/* A short shake (time almost over). */
+.animate-tick {
+    animation: focus-tick 1s ease-in-out infinite;
+}
+@keyframes focus-tick {
+    0%,
+    100% {
+        transform: none;
+    }
+    10%,
+    30% {
+        transform: rotate(-4deg);
+    }
+    20%,
+    40% {
+        transform: rotate(4deg);
+    }
+}
+
+/* Confetti for a good grade: spans with --x (vw offset), --r (turns), --d (delay), background colour. */
+.confetti {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 8px;
+    height: 14px;
+    border-radius: 2px;
+    opacity: 0;
+    animation: focus-confetti 1.6s cubic-bezier(0.2, 0.7, 0.4, 1) var(--d, 0s) forwards;
+}
+@keyframes focus-confetti {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--x, 0), 260px) rotate(var(--r, 1turn));
+    }
+}
+
 /* Respect the "reduce motion" accessibility setting of the device. */
 @media (prefers-reduced-motion: reduce) {
     *,

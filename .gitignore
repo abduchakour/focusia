@@ -2,6 +2,8 @@
 /node_modules
 /public/build
 /public/hot
+/public/sw.js
+/public/sw.js.map
 /public/storage
 /storage/*.key
 /storage/pail
@@ -21,3 +23,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+.env.e2e
+/test-results
+/playwright-report

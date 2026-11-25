@@ -69,7 +69,8 @@ Remettre la démo à zéro : `composer demo`.
 | `vendor/bin/pint` | Met en forme le code PHP |
 | `npm run lint` / `npm run format` | ESLint / Prettier |
 | `npm run typecheck` | Vérification TypeScript |
-| `npm run build` | Construit les fichiers front pour la production |
+| `npm run build` | Construit les fichiers front et le service worker (mode hors ligne) |
+| `npm run test:e2e` | Test du mode hors ligne dans Edge (après `npm run build`, base séparée `focusia_e2e`, port 8002) |
 
 ## Configuration (`.env`)
 

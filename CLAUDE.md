@@ -26,9 +26,9 @@ multi-answer questions, languages other than French. The `institutions` table al
 | Database | **MariaDB 10.4** from XAMPP (`focusia`, tests on `focusia_test`) |
 | Auth | Laravel sessions (DB driver, encrypted, httpOnly, sameSite=lax), **Argon2id** (`HASH_DRIVER`), CSRF built in, login throttling |
 | Files | Private Laravel disk (`FOCUSIA_FILES_DISK=local` → `storage/app/private`), temporary signed URLs (10 min). `s3` (R2/B2) possible later without code changes |
-| Offline | (phase 4) `vite-plugin-pwa` service worker + **Dexie.js** (IndexedDB) |
+| Offline | `vite-plugin-pwa` (injectManifest, `resources/js/sw.ts` → `public/sw.js`, generated) + **Dexie.js** (IndexedDB) |
 | Charts | (phase 5) Chart.js via vue-chartjs |
-| Tests | PHPUnit (`php artisan test`) on MariaDB; (phase 4) Playwright for offline flows |
+| Tests | PHPUnit (`php artisan test`) on MariaDB; Playwright e2e (`npm run test:e2e`, Edge, DB `focusia_e2e`, port 8002) |
 | CI | GitHub Actions `.github/workflows/ci.yml` (Pint, ESLint, Prettier, vue-tsc, build, tests on MariaDB service) |
 | Demo on phones | free Cloudflare quick tunnel (`cloudflared tunnel --url http://127.0.0.1:8001`) for HTTPS |
 
@@ -42,7 +42,8 @@ vendor/bin/pint         # PHP formatting
 npm run lint            # ESLint --fix      | npm run lint:check (CI)
 npm run format          # Prettier         | npm run format:check (CI)
 npm run typecheck       # vue-tsc
-npm run build           # production assets
+npm run build           # production assets + service worker (low RAM: NODE_OPTIONS=--max-old-space-size=768)
+npm run test:e2e        # offline e2e (after npm run build): own server on 8002, .env.e2e, DB focusia_e2e reseeded
 ```
 
 Port **8000 is used by another local project** of the owner: FocusIA uses **8001** (`SERVER_PORT` in `.env`).
@@ -146,6 +147,19 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
 - A quiz already answered cannot be deleted (results are kept); a notion used by a question cannot be deleted.
 - Ownership is checked in FormRequest `authorize()` (before validation) → intruders always get 403, never validation errors.
 - Notions are per teacher + subject; the editor proposes the notions of the quiz subject and can create one inline.
+
+## Offline architecture (phase 4)
+
+- **Start** (POST, online) creates the attempt with `started_at` = server time; the take page then needs no network.
+- Answers are saved in IndexedDB at every tap (`lib/offline/db.ts`, table `drafts`); **Send** writes to the `outbox`
+  table first, then `lib/offline/sync.ts` POSTs JSON (`X-XSRF-TOKEN` from the cookie) and retries on `online`, app start, every 30 s.
+  Queue entries are keyed by user id and only sent with that user's session. 401 ⇒ "reconnect"; 403/409/422 ⇒ shown, never retried.
+- The **server grades** (correct answers never reach the phone before `corrections_at`); submit is idempotent (retry returns the stored result).
+- Rule 8 check: `App\Support\AttemptAcceptance` (pure, unit-tested). answered_at = device time + gap measured with `serverNow`; a future time is clamped to now.
+- Service worker: precaches built assets; caches **HTML navigations under `/etudiant` only** (network first); `keepPageForOffline()`
+  stores pages reached by Inertia links; offline, Inertia GET visits become full page loads; logout deletes the page cache.
+- Before `corrections_at` the result page shows the grade only (no per-notion detail: a one-question notion would reveal the answer).
+- JSON requests keep plain JSON errors (exception renderer skips `expectsJson()` non-Inertia requests).
 
 ## Visual checks
 

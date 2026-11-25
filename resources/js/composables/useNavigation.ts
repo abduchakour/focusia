@@ -20,7 +20,8 @@ export function useNavigation() {
               ]
             : [
                   { title: 'Accueil', href: route('student.dashboard'), icon: LayoutGrid },
-                  { title: 'Mes groupes', href: route('student.groups.index'), icon: UsersRound },
+                  { title: 'Quiz', href: route('student.quizzes.index'), icon: BookOpenCheck },
+                  { title: 'Groupes', href: route('student.groups.index'), icon: UsersRound },
               ],
     );
 

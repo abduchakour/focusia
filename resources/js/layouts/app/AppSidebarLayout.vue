@@ -5,6 +5,7 @@ import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
 import FlashMessage from '@/components/FlashMessage.vue';
 import MobileNav from '@/components/MobileNav.vue';
+import OfflineBanner from '@/components/OfflineBanner.vue';
 import type { BreadcrumbItemType } from '@/types';
 
 interface Props {
@@ -21,6 +22,7 @@ withDefaults(defineProps<Props>(), {
         <AppSidebar />
         <AppContent variant="sidebar" class="pb-safe-nav md:pb-0">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />
+            <OfflineBanner />
             <FlashMessage />
             <slot />
         </AppContent>

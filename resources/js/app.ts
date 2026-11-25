@@ -1,11 +1,14 @@
 import '../css/app.css';
 
+import type { Page } from '@inertiajs/core';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { initializeTheme } from './composables/useAppearance';
+import { setupOffline } from './lib/offline/setup';
+import type { SharedData } from './types';
 
 const appName = import.meta.env.VITE_APP_NAME || 'FocusIA';
 
@@ -17,6 +20,8 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .mount(el);
+
+        setupOffline(props.initialPage as Page<SharedData>);
     },
     progress: {
         color: '#1679b8',

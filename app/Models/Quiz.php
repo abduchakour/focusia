@@ -38,6 +38,27 @@ class Quiz extends Model
         $query->whereNotNull('published_at')->where('published_at', '<=', now());
     }
 
+    /**
+     * Quizzes published in at least one group where the student is an active member.
+     * whereHas returns each quiz once, even when it targets several of their groups (rule 12).
+     */
+    public function scopeVisibleTo(Builder $query, User $student): void
+    {
+        $query->published()->whereHas('groups.enrollments', fn (Builder $enrollment) => $enrollment
+            ->where('student_id', $student->id)
+            ->whereNull('removed_at'));
+    }
+
+    /** Deadline of an attempt: the due date, or earlier when the quiz has a duration. */
+    public function deadlineFor(Attempt $attempt): Carbon
+    {
+        if ($this->duration_minutes === null) {
+            return $this->due_at;
+        }
+
+        return $attempt->started_at->copy()->addMinutes($this->duration_minutes)->min($this->due_at);
+    }
+
     public function isPublished(): bool
     {
         return $this->published_at !== null && $this->published_at->lte(now());

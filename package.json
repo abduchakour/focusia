@@ -9,7 +9,8 @@
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
         "typecheck": "vue-tsc --noEmit",
-        "lint:check": "eslint ."
+        "lint:check": "eslint .",
+        "test:e2e": "playwright test"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
@@ -21,7 +22,13 @@
         "prettier": "^3.4.2",
         "prettier-plugin-organize-imports": "^4.1.0",
         "prettier-plugin-tailwindcss": "^0.6.9",
-        "typescript-eslint": "^8.23.0"
+        "typescript-eslint": "^8.23.0",
+        "vite-plugin-pwa": "^0.21.2",
+        "workbox-cacheable-response": "^7.4.1",
+        "workbox-core": "^7.4.1",
+        "workbox-precaching": "^7.4.1",
+        "workbox-routing": "^7.4.1",
+        "workbox-strategies": "^7.4.1"
     },
     "dependencies": {
         "@headlessui/vue": "^1.7.23",
@@ -35,6 +42,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
+        "dexie": "^4.4.7",
         "laravel-vite-plugin": "^1.0",
         "lucide": "^0.468.0",
         "lucide-vue-next": "^0.468.0",
