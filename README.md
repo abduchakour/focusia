@@ -37,9 +37,12 @@ mysql -u root -e "CREATE DATABASE focusia CHARACTER SET utf8mb4 COLLATE utf8mb4_
 # 4. Tables + données de démonstration
 composer demo
 
-# 5. Lancer l'application (serveur PHP + Vite)
-composer dev
+# 5. Lancer l'application
+composer start   # léger : fichiers déjà compilés (démo, PC avec peu de mémoire)
+composer dev     # développement : rechargement automatique avec Vite (plus gourmand)
 ```
+
+Après toute modification de l'interface, `npm run build` met à jour les fichiers utilisés par `composer start`.
 
 L'application est disponible sur **http://127.0.0.1:8001**.
 
