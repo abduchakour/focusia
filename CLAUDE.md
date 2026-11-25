@@ -186,6 +186,19 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
   Laravel's public `/storage` serving of the local disk is disabled (`serve => false`).
 - Phones: bottom bar shows the first 4 menu items + "Plus" (sheet with the others, profile, logout).
 
+## Hardening (phase 8)
+
+- `SecurityHeaders` middleware on every response (X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy,
+  `frame-ancestors 'none'`; HSTS over HTTPS). No full script CSP (Vite dev server and Ziggy inline routes).
+- `trustProxies(127.0.0.1, ::1)`: the Cloudflare tunnel runs locally and forwards `X-Forwarded-Proto: https`.
+- Colours: `--success` and `--warning` darkened for WCAG AA text contrast (Lighthouse accessibility 100).
+- Dexie is loaded on demand (`sync.ts` → `import('./db')`), keeping it out of the main bundle.
+- `composer start` caches routes and views (`composer dev` clears them). **After adding a route, run `php artisan route:clear`**,
+  otherwise tests and pages use the old cached routes. Config is never cached (tests would hit the demo DB).
+- Lighthouse 12 + Edge (`CHROME_PATH`): home 100 accessibility / best practices / SEO; performance ~52 on the owner's
+  4 GB PC with `php artisan serve` (no gzip, ~1.3 s server time under simulated slow 4G). Through the Cloudflare tunnel
+  responses are compressed and cached by Cloudflare; repeat visits are served by the service worker.
+
 ## Visual checks
 
 Playwright (`@playwright/test`, no browser download) drives the installed **Edge** (`channel: 'msedge'`) for screenshots

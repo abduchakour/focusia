@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -25,6 +26,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+        $middleware->append(SecurityHeaders::class);
+
+        // Demo on phones through the Cloudflare tunnel (cloudflared runs on this computer and
+        // forwards HTTPS requests): trust its X-Forwarded-* headers so links stay in https.
+        $middleware->trustProxies(at: ['127.0.0.1', '::1']);
 
         $middleware->alias([
             'role' => EnsureRole::class,

@@ -1,5 +1,8 @@
 import { ref } from 'vue';
-import { db, entryKey, type PendingSubmission } from './db';
+import type { PendingSubmission } from './db';
+
+/** IndexedDB (Dexie) is only loaded when a student needs the queue: lighter first page for everyone else. */
+const database = () => import('./db');
 
 /**
  * Offline queue of quiz answers. Answers are written to IndexedDB first, then sent;
@@ -53,16 +56,23 @@ export function useSyncFor(id: number | null): void {
 }
 
 export async function refresh(): Promise<void> {
-    pending.value = userId === null ? [] : await db.outbox.where('userId').equals(userId).toArray();
+    if (userId === null) {
+        pending.value = [];
+        return;
+    }
+    const { db } = await database();
+    pending.value = await db.outbox.where('userId').equals(userId).toArray();
 }
 
 export async function enqueue(entry: Omit<PendingSubmission, 'key' | 'createdAt' | 'error'>): Promise<void> {
+    const { db, entryKey } = await database();
     await db.outbox.put({ ...entry, key: entryKey(entry.userId, entry.quizId), createdAt: Date.now(), error: null });
     await refresh();
     await flush();
 }
 
 export async function dismiss(entry: PendingSubmission): Promise<void> {
+    const { db } = await database();
     await db.outbox.delete(entry.key);
     await refresh();
 }
@@ -75,6 +85,7 @@ export function flush(): Promise<void> {
 
 async function run(): Promise<void> {
     if (userId === null || !navigator.onLine) return;
+    const { db } = await database();
     const entries = await db.outbox.where('userId').equals(userId).toArray();
 
     for (const entry of entries) {
@@ -105,6 +116,7 @@ async function send(entry: PendingSubmission): Promise<'next' | 'stop'> {
 
     if (response.ok) {
         const result = (await response.json()) as SubmitResult;
+        const { db } = await database();
         await db.transaction('rw', db.outbox, db.drafts, async () => {
             await db.outbox.delete(entry.key);
             await db.drafts.delete(entry.key);
@@ -123,6 +135,7 @@ async function send(entry: PendingSubmission): Promise<'next' | 'stop'> {
         const message =
             Object.values(body.errors ?? {})[0]?.[0] ??
             (response.status === 403 ? "Vous n'avez plus accès à ce quiz." : (body.message ?? "Vos réponses n'ont pas pu être acceptées."));
+        const { db } = await database();
         await db.outbox.update(entry.key, { error: message });
         return 'next';
     }

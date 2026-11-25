@@ -19,12 +19,20 @@ withDefaults(defineProps<Props>(), {
 
 <template>
     <AppShell variant="sidebar">
+        <!-- Keyboard users jump straight to the page content. -->
+        <a
+            href="#contenu"
+            class="sr-only z-50 rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+            >Aller au contenu</a
+        >
         <AppSidebar />
         <AppContent variant="sidebar" class="pb-safe-nav md:pb-0">
             <AppSidebarHeader :breadcrumbs="breadcrumbs" />
             <OfflineBanner />
             <FlashMessage />
-            <slot />
+            <div id="contenu" tabindex="-1" class="flex flex-1 flex-col outline-none">
+                <slot />
+            </div>
         </AppContent>
         <MobileNav />
     </AppShell>
