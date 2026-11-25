@@ -7,7 +7,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    // Optional local photo for the live demo (public/images/accueil/local is never committed:
+    // its rights do not allow publishing it). Without it, the free-licensed photo is used.
+    $local = 'images/accueil/local/universite.webp';
+
+    return Inertia::render('Welcome', [
+        'heroPhoto' => is_file(public_path($local)) ? '/'.$local : null,
+    ]);
 })->name('home');
 
 Route::middleware('auth')->group(function () {

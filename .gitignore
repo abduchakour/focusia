@@ -29,3 +29,4 @@ yarn-error.log
 /backups
 /storage/app/e2e
 /junit.xml
+/public/images/accueil/local

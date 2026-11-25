@@ -26,6 +26,7 @@ import {
 } from 'lucide-vue-next';
 import { onMounted, onUnmounted, ref } from 'vue';
 
+const props = defineProps<{ heroPhoto?: string | null }>();
 const page = usePage<SharedData>();
 
 /** Free-licensed photos (Wikimedia Commons); credits are displayed in the footer. */
@@ -174,7 +175,7 @@ const year = new Date().getFullYear();
                             <path d="M0 0 L15 10 L0 20 Z" fill="#fff" />
                             <path d="M5 7.4 L5.65 9.3 H7.6 L6 10.5 L6.6 12.4 L5 11.2 L3.4 12.4 L4 10.5 L2.4 9.3 H4.35 Z" fill="#d7141a" />
                         </svg>
-                        Pour les universités et instituts de Djibouti
+                        Pour les universités et instituts de Djibouti, publics et privés
                     </p>
                     <h1
                         class="animate-enter text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
@@ -220,15 +221,17 @@ const year = new Date().getFullYear();
                 <div class="animate-enter relative mx-auto w-full max-w-lg" style="animation-delay: 0.2s">
                     <div class="relative overflow-hidden rounded-[2rem] border-4 border-background shadow-2xl shadow-primary/20">
                         <img
-                            :src="photos[0].src"
-                            :alt="photos[0].alt"
+                            :src="props.heroPhoto ?? photos[0].src"
+                            :alt="props.heroPhoto ? 'Campus de l’Université de Djibouti' : photos[0].alt"
                             width="1400"
                             height="960"
                             fetchpriority="high"
                             class="animate-kenburns aspect-[4/3] w-full object-cover"
                         />
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0b2a6b]/70 via-transparent to-transparent" />
-                        <p class="absolute bottom-4 left-4 text-sm font-medium text-white/90">{{ photos[0].caption }}</p>
+                        <p class="absolute bottom-4 left-4 text-sm font-medium text-white/90">
+                            {{ props.heroPhoto ? "Campus de l'Université de Djibouti" : photos[0].caption }}
+                        </p>
                     </div>
 
                     <!-- Grade card -->
