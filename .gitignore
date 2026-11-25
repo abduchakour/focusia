@@ -28,3 +28,4 @@ yarn-error.log
 /playwright-report
 /backups
 /storage/app/e2e
+/junit.xml

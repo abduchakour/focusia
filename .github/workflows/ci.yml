@@ -68,4 +68,9 @@ jobs:
         run: npm run build
 
       - name: Tests
-        run: php artisan test
+        run: php artisan test --log-junit junit.xml
+
+      # Failed tests become annotations, readable on the run page (and through the public API).
+      - name: Report failed tests
+        if: failure()
+        run: php .github/scripts/junit-annotations.php junit.xml
