@@ -102,6 +102,10 @@ Remettre la démo à zéro : `composer demo`.
 | `FOCUSIA_QUIZ_GRACE_SECONDS` | Tolérance sur la durée d'un quiz passé hors ligne | `60` |
 | `FOCUSIA_LOGIN_MAX_ATTEMPTS` | Tentatives de connexion par minute | `5` |
 
+## Mise en ligne gratuite
+
+Guide pas à pas : **[DEPLOIEMENT.md](DEPLOIEMENT.md)** (alwaysdata, offre Free).
+
 ## Mise en ligne sur un vrai serveur (plus tard)
 
 - `.env` : `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://…`, `SESSION_SECURE_COOKIE=true` ;
