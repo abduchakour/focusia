@@ -62,6 +62,19 @@ Never stop processes that are not ours.
 - PHP style: Pint (Laravel preset). Front: Prettier + ESLint, `<script setup lang="ts">`.
 - Commit at the end of each phase, message `feat(phase-N): ...`, with the Co-Authored-By trailer.
 
+## Routing and access control
+
+- `/dashboard` redirects to the role's space. Teacher routes: prefix `/enseignant`, names `teacher.*`, middleware `role:teacher`.
+  Student routes: prefix `/etudiant`, names `student.*`, middleware `role:student`. Controllers in `App\Http\Controllers\Teacher|Student`.
+- `EnsureRole` runs **before** route-model binding (priority list): wrong role ⇒ always 403, never a 404 leak.
+- `tests/Feature/RoleAccessTest.php` walks **every** route tagged `role:*` — new routes are covered automatically; keep them inside those groups.
+- Group membership / ownership checks (rule 9, 12) go in Policies, on top of the role middleware.
+- Flash messages: `->with('success'|'error', 'Message en français')`, displayed by `FlashMessage.vue`.
+- Errors 403/404/429 (and 500/503 when `APP_DEBUG=false`) render `pages/Error.vue` in French; 419 redirects back with a message.
+- Shared Inertia props expose only explicit user fields (`HandleInertiaRequests`), never the model.
+- Login throttling: `focusia.login_max_attempts` per e-mail+IP (LoginRequest) + `throttle:auth` 20/min per IP on login, register, forgot-password.
+- Password rule: min 8, letters + numbers (`AppServiceProvider`). French translations come from `laravel-lang/common` (`lang/fr`).
+
 ## Data model (see `database/migrations`)
 
 `institutions` · `users` (first_name, last_name, role teacher|student, institution_id) · `groups` (access_code 6 chars unique) ·

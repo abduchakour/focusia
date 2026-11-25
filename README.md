@@ -5,7 +5,7 @@ Les enseignants créent des groupes, des quiz corrigés automatiquement (note su
 bibliothèque ; les résultats sont transformés en **suivi de la compréhension, notion par notion**. Les étudiants peuvent
 répondre aux quiz même avec une connexion intermittente.
 
-> État : **V1 en cours** — phase 0 (fondations) terminée.
+> État : **V1 en cours** — phases 0 (fondations) et 1 (authentification et rôles) terminées.
 
 ## Technologies (100 % gratuites)
 

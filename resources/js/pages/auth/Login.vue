@@ -28,8 +28,8 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="Log in to your account" description="Enter your email and password below to log in">
-        <Head title="Log in" />
+    <AuthBase title="Connexion" description="Saisissez votre e-mail et votre mot de passe">
+        <Head title="Connexion" />
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
             {{ status }}
@@ -38,55 +38,44 @@ const submit = () => {
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email">Adresse e-mail</Label>
                     <Input
                         id="email"
                         type="email"
                         required
                         autofocus
-                        tabindex="1"
                         autocomplete="email"
+                        inputmode="email"
                         v-model="form.email"
-                        placeholder="email@example.com"
+                        placeholder="prenom.nom@exemple.dj"
+                        class="h-11"
                     />
                     <InputError :message="form.errors.email" />
                 </div>
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Password</Label>
-                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
-                            Forgot password?
-                        </TextLink>
+                        <Label for="password">Mot de passe</Label>
+                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm">Mot de passe oublié ?</TextLink>
                     </div>
-                    <Input
-                        id="password"
-                        type="password"
-                        required
-                        tabindex="2"
-                        autocomplete="current-password"
-                        v-model="form.password"
-                        placeholder="Password"
-                    />
+                    <Input id="password" type="password" required autocomplete="current-password" v-model="form.password" class="h-11" />
                     <InputError :message="form.errors.password" />
                 </div>
 
-                <div class="flex items-center justify-between" tabindex="3">
-                    <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" v-model:checked="form.remember" tabindex="4" />
-                        <span>Remember me</span>
-                    </Label>
-                </div>
+                <Label for="remember" class="flex items-center space-x-3">
+                    <Checkbox id="remember" v-model:checked="form.remember" />
+                    <span>Rester connecté</span>
+                </Label>
 
-                <Button type="submit" class="mt-4 w-full" tabindex="4" :disabled="form.processing">
+                <Button type="submit" class="h-11 w-full text-base" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Log in
+                    Se connecter
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Don't have an account?
-                <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
+                Pas encore de compte ?
+                <TextLink :href="route('register')">Créer un compte</TextLink>
             </div>
         </form>
     </AuthBase>

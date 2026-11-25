@@ -90,6 +90,32 @@ class User extends Authenticatable
         return $this->hasMany(Group::class, 'teacher_id');
     }
 
+    /** Content owned by a teacher (rule 9: a teacher only edits their own content). */
+    public function quizzes(): HasMany
+    {
+        return $this->hasMany(Quiz::class, 'teacher_id');
+    }
+
+    public function notions(): HasMany
+    {
+        return $this->hasMany(Notion::class, 'teacher_id');
+    }
+
+    public function materials(): HasMany
+    {
+        return $this->hasMany(Material::class, 'teacher_id');
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class, 'teacher_id');
+    }
+
+    public function resources(): HasMany
+    {
+        return $this->hasMany(Resource::class, 'teacher_id');
+    }
+
     /** All enrollments of a student, including the ones they were removed from. */
     public function enrollments(): HasMany
     {

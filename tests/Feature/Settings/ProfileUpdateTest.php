@@ -43,6 +43,17 @@ class ProfileUpdateTest extends TestCase
         $this->assertNull($user->email_verified_at);
     }
 
+    public function test_a_user_cannot_change_their_own_role(): void
+    {
+        $student = User::factory()->student()->create();
+
+        $this->actingAs($student)->patch('/settings/profile', [
+            'first_name' => 'A', 'last_name' => 'B', 'email' => $student->email, 'role' => 'teacher',
+        ]);
+
+        $this->assertTrue($student->fresh()->isStudent());
+    }
+
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged()
     {
         $user = User::factory()->create();
