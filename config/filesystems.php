@@ -39,6 +39,15 @@ return [
             'report' => false,
         ],
 
+        // End-to-end tests and screenshots (APP_ENV=e2e): never mixed with the real uploads.
+        'e2e' => [
+            'driver' => 'local',
+            'root' => storage_path('app/e2e'),
+            'serve' => false,
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

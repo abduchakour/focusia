@@ -5,11 +5,22 @@ Les enseignants créent des groupes, des quiz corrigés automatiquement (note su
 bibliothèque ; les résultats sont transformés en **suivi de la compréhension, notion par notion**. Les étudiants peuvent
 répondre aux quiz même avec une connexion intermittente.
 
-> État : **V1 en cours** — phases 0 à 2 terminées (fondations, authentification, groupes) + base du design.
+> État : **V1 terminée** (phases 0 à 9). Pour présenter le projet : **[DEMO.md](DEMO.md)**.
+
+## Fonctionnalités
+
+- **Enseignant** : groupes avec code d'accès, quiz (4 propositions, 1 bonne réponse, chaque question liée à une notion),
+  notions, résultats détaillés (répartition des notes, erreurs fréquentes), suivi de la compréhension par notion,
+  étudiants en difficulté, supports de cours, bibliothèque, devoirs avec notation sur 20 et commentaire.
+- **Étudiant** : rejoindre un groupe avec un code, passer les quiz **même hors connexion** (application installable),
+  note immédiate, corrections après la date prévue, supports, bibliothèque, devoirs (fichier et/ou texte).
+- **Sécurité** : rôles et appartenance aux groupes vérifiés à chaque requête, Argon2id, limitation des tentatives,
+  fichiers privés au type réel contrôlé, liens de téléchargement signés et personnels, en-têtes de sécurité.
 
 ## Technologies (100 % gratuites)
 
-Laravel 12 (PHP 8.3) · Inertia + Vue 3 + TypeScript · Tailwind CSS · MariaDB (XAMPP) · PHPUnit · GitHub Actions.
+Laravel 12 (PHP 8.3) · Inertia + Vue 3 + TypeScript · Tailwind CSS · MariaDB (XAMPP) · PWA (vite-plugin-pwa, Dexie) ·
+PHPUnit · Playwright (Edge déjà installé) · GitHub Actions · Cloudflare Tunnel gratuit pour la démo sur téléphone.
 
 ## Installation (Windows)
 
@@ -63,7 +74,10 @@ Remettre la démo à zéro : `composer demo`.
 
 | Commande | Rôle |
 | --- | --- |
+| `composer start` | Lance l'application compilée (port 8001), le plus léger pour une démo |
 | `composer dev` | Lance le serveur (port 8001) et Vite |
+| `composer telephone` | Ouvre l'application en HTTPS sur Internet (tunnel Cloudflare gratuit) pour les téléphones |
+| `composer backup` | Sauvegarde la base et les fichiers dans `backups/` (les 10 dernières sont gardées) |
 | `composer demo` | Recrée toutes les tables et les données de démonstration |
 | `php artisan test` | Lance les tests (base `focusia_test`) |
 | `vendor/bin/pint` | Met en forme le code PHP |
@@ -83,3 +97,12 @@ Remettre la démo à zéro : `composer demo`.
 | `FOCUSIA_DIFFICULTY_NOTION_RATE` | Taux de réussite minimal par notion | `0.5` |
 | `FOCUSIA_QUIZ_GRACE_SECONDS` | Tolérance sur la durée d'un quiz passé hors ligne | `60` |
 | `FOCUSIA_LOGIN_MAX_ATTEMPTS` | Tentatives de connexion par minute | `5` |
+
+## Mise en ligne sur un vrai serveur (plus tard)
+
+- `.env` : `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://…`, `SESSION_SECURE_COOKIE=true` ;
+- `composer install --no-dev --optimize-autoloader`, `npm ci && npm run build`, `php artisan migrate --force`,
+  `php artisan optimize` ;
+- servir le dossier `public/` en HTTPS (obligatoire pour le mode hors ligne) ;
+- fichiers sur un stockage S3 compatible (Cloudflare R2, Backblaze B2) : `FOCUSIA_FILES_DISK=s3` + variables `AWS_*` ;
+- sauvegarde quotidienne : tâche planifiée Windows qui lance `composer backup`.

@@ -66,6 +66,13 @@
             "@php artisan view:clear --ansi",
             "npx concurrently -k -c \"#93c5fd,#fdba74\" \"php artisan serve\" \"npm run dev\" --names=serveur,vite"
         ],
+        "backup": [
+            "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/backup.ps1"
+        ],
+        "telephone": [
+            "Composer\\Config::disableProcessTimeout",
+            "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/demo-telephone.ps1"
+        ],
         "demo": [
             "@php artisan migrate:fresh --seed --ansi"
         ],

@@ -13,7 +13,9 @@ export default function globalSetup(): void {
     const env = readFileSync('.env', 'utf8')
         .replace(/^DB_DATABASE=.*$/m, 'DB_DATABASE=focusia_e2e')
         .replace(/^APP_URL=.*$/m, 'APP_URL=http://127.0.0.1:8002')
-        .replace(/^SESSION_SECURE_COOKIE=.*$/m, 'SESSION_SECURE_COOKIE=false');
+        .replace(/^SESSION_SECURE_COOKIE=.*$/m, 'SESSION_SECURE_COOKIE=false')
+        // Uploads of the e2e runs go to storage/app/e2e, never next to the real files.
+        .concat('\nFOCUSIA_FILES_DISK=e2e\n');
     writeFileSync('.env.e2e', env);
 
     const value = (key: string, fallback = '') => env.match(new RegExp(`^${key}=(.*)$`, 'm'))?.[1].trim().replace(/^"|"$/g, '') ?? fallback;

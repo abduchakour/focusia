@@ -43,6 +43,8 @@ npm run lint            # ESLint --fix      | npm run lint:check (CI)
 npm run format          # Prettier         | npm run format:check (CI)
 npm run typecheck       # vue-tsc
 npm run build           # production assets + service worker (low RAM: NODE_OPTIONS=--max-old-space-size=768)
+composer backup         # DB dump + private files -> backups/focusia-*.zip (keeps 10)
+composer telephone      # Cloudflare quick tunnel to 127.0.0.1:8001 (HTTPS for phones)
 npm run test:e2e        # offline e2e (after npm run build): own server on 8002, .env.e2e, DB focusia_e2e reseeded
 ```
 
@@ -198,6 +200,12 @@ Homework states (derived, never stored — `App\Support\SubmissionState`): `A_RE
 - Lighthouse 12 + Edge (`CHROME_PATH`): home 100 accessibility / best practices / SEO; performance ~52 on the owner's
   4 GB PC with `php artisan serve` (no gzip, ~1.3 s server time under simulated slow 4G). Through the Cloudflare tunnel
   responses are compressed and cached by Cloudflare; repeat visits are served by the service worker.
+
+## Demo and operations (phase 9)
+
+- `DEMO.md`: jury checklist and 12-minute scenario (French). `README.md`: install, commands, future production setup.
+- Scripts in `scripts/*.ps1` are saved **UTF-8 with BOM** (Windows PowerShell 5.1 otherwise breaks accents).
+- e2e runs use `FOCUSIA_FILES_DISK=e2e` (`storage/app/e2e`) so their uploads never mix with real files.
 
 ## Visual checks
 
